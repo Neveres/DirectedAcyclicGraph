@@ -8,8 +8,9 @@ const hints = [
   'To add edges, hold shift and click/drag to between nodes.',
   'To delete a node or edge, click on it and press delete.',
   'Click and drag nodes to change their position.',
-  'Note: In MacOS, use command instead of Ctrl.',
 ]
+
+const NOTE = 'Note: In MacOS, use command instead of Ctrl.'
 
 const Hints = () => (
   <ul>
@@ -24,6 +25,7 @@ const CollapseHeader = () => {
     <Collapse>
       <Panel header="Tutorial" key="1">
         <Hints />
+        <div style={{ paddingLeft: '25px' }}>{NOTE}</div>
       </Panel>
     </Collapse>
   )
