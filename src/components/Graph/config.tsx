@@ -42,12 +42,6 @@ export default {
     emptyNode: {
       shape: EmptyNodeShape,
       shapeId: '#emptyNode',
-      typeText: 'None',
-    },
-    empty: {
-      shape: CustomEmptyShape,
-      shapeId: '#empty',
-      typeText: 'None',
     },
   },
 }
