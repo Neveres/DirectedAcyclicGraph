@@ -1,7 +1,7 @@
 import React from 'react'
 import { Input, notification } from 'antd'
 import { GraphView, IGraphViewProps } from 'react-digraph'
-import { isLabelValid } from 'src/libraries'
+import { isLabelValid, getCycle } from 'src/libraries'
 import GraphConfig, { NODE_KEY } from './config'
 import defaultGraph from './default-graph'
 
@@ -62,7 +62,32 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
     }
   }
 
-  onCreateEdge: IGraphViewProps['onCreateEdge'] = (sourceNode, targetNode) => {}
+  onCreateEdge: IGraphViewProps['onCreateEdge'] = (sourceNode, targetNode) => {
+    const { graph } = this.state
+    const { edges } = graph
+
+    const newEdges = [
+      ...edges,
+      {
+        source: sourceNode.title,
+        target: targetNode.title,
+      },
+    ]
+
+    if (!getCycle(newEdges)) {
+      this.setState({
+        graph: {
+          ...graph,
+          edges: newEdges,
+        },
+      })
+    } else {
+      this.openNotificationWithIcon({
+        message: 'Invalid edge',
+        description: 'Adding this edge would create cycle.',
+      })
+    }
+  }
 
   render() {
     const {
