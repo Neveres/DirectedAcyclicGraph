@@ -1,7 +1,7 @@
 import React from 'react'
 import { GraphView, IGraphViewProps } from 'react-digraph'
 import GraphConfig, { NODE_KEY } from './config'
-import sample1 from './graph1-sample'
+import defaultGraph from './default-graph'
 
 const { NodeTypes, NodeSubtypes, EdgeTypes } = GraphConfig
 
@@ -17,7 +17,7 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
   constructor(props: IGraphProps) {
     super(props)
     this.state = {
-      graph: sample1,
+      graph: defaultGraph,
       selected: null,
     }
   }
@@ -31,6 +31,8 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
   onCreateNode: IGraphViewProps['onCreateNode'] = (x, y, event) => {
     const { pageX, pageY } = event
   }
+
+  onCreateEdge: IGraphViewProps['onCreateEdge'] = (sourceNode, targetNode) => {}
 
   render() {
     const {
@@ -54,7 +56,7 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
           onCreateNode={this.onCreateNode}
           onUpdateNode={() => {}}
           onDeleteSelected={this.onDeleteSelected}
-          onCreateEdge={() => {}}
+          onCreateEdge={this.onCreateEdge}
           onSwapEdge={() => {}}
         />
       </div>
