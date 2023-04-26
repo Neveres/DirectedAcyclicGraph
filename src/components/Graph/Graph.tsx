@@ -1,5 +1,7 @@
 import React from 'react'
+import { Input, notification } from 'antd'
 import { GraphView, IGraphViewProps } from 'react-digraph'
+import { isLabelValid } from 'src/libraries'
 import GraphConfig, { NODE_KEY } from './config'
 import defaultGraph from './default-graph'
 
@@ -7,8 +9,9 @@ const { NodeTypes, NodeSubtypes, EdgeTypes } = GraphConfig
 
 type IGraphProps = {}
 type IGraphState = {
-  graph: IObject
+  graph: typeof defaultGraph
   selected: IGraphViewProps['selected']
+  label: string
 }
 
 export class Graph extends React.Component<IGraphProps, IGraphState> {
@@ -19,7 +22,19 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
     this.state = {
       graph: defaultGraph,
       selected: null,
+      label: '',
     }
+  }
+
+  onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ label: event.target.value.trim() })
+  }
+
+  openNotificationWithIcon = (content: {
+    message: string
+    description: string
+  }) => {
+    notification.error(content)
   }
 
   onDeleteSelected: IGraphViewProps['onDeleteSelected'] = (selected) => {}
@@ -28,8 +43,23 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
     this.setState({ selected })
   }
 
-  onCreateNode: IGraphViewProps['onCreateNode'] = (x, y, event) => {
-    const { pageX, pageY } = event
+  onCreateNode: IGraphViewProps['onCreateNode'] = (x, y) => {
+    const { graph, label } = this.state
+    const { nodes } = graph
+
+    if (isLabelValid(label, nodes)) {
+      this.setState({
+        graph: {
+          ...graph,
+          nodes: [...nodes, { id: label, title: label, x, y }],
+        },
+      })
+    } else {
+      this.openNotificationWithIcon({
+        message: 'Invalid label',
+        description: 'The label has been used.',
+      })
+    }
   }
 
   onCreateEdge: IGraphViewProps['onCreateEdge'] = (sourceNode, targetNode) => {}
@@ -38,10 +68,17 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
     const {
       graph: { nodes, edges },
       selected,
+      label,
     } = this.state
 
     return (
       <div>
+        <Input
+          value={label}
+          onChange={this.onInputChange}
+          placeholder="Input label for new node"
+          allowClear
+        />
         <GraphView
           ref={(ref: any) => (this.graphViewRef = ref)}
           nodeKey={NODE_KEY}
