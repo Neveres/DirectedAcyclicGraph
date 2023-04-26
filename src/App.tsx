@@ -1,10 +1,11 @@
 import React from 'react'
-import { Graph } from 'src/components'
+import { CollapseHeader, Graph } from 'src/components'
 import './App.css'
 
 const App = () => {
   return (
     <div>
+      <CollapseHeader />
       <Graph />
     </div>
   )
