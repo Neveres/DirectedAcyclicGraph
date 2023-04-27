@@ -37,7 +37,43 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
     notification.error(content)
   }
 
-  onDeleteSelected: IGraphViewProps['onDeleteSelected'] = (selected) => {}
+  onDeleteSelected: IGraphViewProps['onDeleteSelected'] = (selected) => {
+    const { graph } = this.state
+    const { edges, nodes } = graph
+    const { edges: selectedEdges, nodes: selectedNodes } = selected
+
+    if (selectedEdges) {
+      const [selectedEdge] = Array.from(selectedEdges.values())
+      const { source, target } = selectedEdge
+
+      const newEdges = edges.filter(
+        (edge) => edge.source !== source || edge.target !== target,
+      )
+
+      this.setState({
+        graph: {
+          ...graph,
+          edges: newEdges,
+        },
+      })
+    } else if (selectedNodes) {
+      const [selectedNode] = Array.from(selectedNodes.values())
+      const { title } = selectedNode
+
+      const newEdges = edges.filter(
+        ({ source, target }) => source !== title && target !== title,
+      )
+
+      const newNodes = nodes.filter((node) => node.title !== title)
+
+      this.setState({
+        graph: {
+          nodes: newNodes,
+          edges: newEdges,
+        },
+      })
+    }
+  }
 
   onSelect: IGraphViewProps['onSelect'] = (selected, event) => {
     this.setState({ selected })
@@ -89,6 +125,35 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
     }
   }
 
+  canDeleteSelected: IGraphViewProps['canDeleteSelected'] = (selected) => {
+    const {
+      graph: { edges },
+    } = this.state
+    const { edges: selectedEdges, nodes: selectedNodes } = selected
+
+    if (selectedEdges) {
+      const [selectedEdge] = Array.from(selectedEdges.values())
+      const { source, target } = selectedEdge
+
+      const newEdges = edges.filter(
+        (edge) => edge.source !== source || edge.target !== target,
+      )
+
+      return isAcyclic(newEdges)
+    } else if (selectedNodes) {
+      const [selectedNode] = Array.from(selectedNodes.values())
+      const { title } = selectedNode
+
+      const newEdges = edges.filter(
+        ({ source, target }) => source !== title && target !== title,
+      )
+
+      return isAcyclic(newEdges)
+    }
+
+    return true
+  }
+
   render() {
     const {
       graph: { nodes, edges },
@@ -113,13 +178,11 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
           nodeTypes={NodeTypes}
           nodeSubtypes={NodeSubtypes}
           edgeTypes={EdgeTypes}
-          readOnly={false}
           onSelect={this.onSelect}
           onCreateNode={this.onCreateNode}
-          onUpdateNode={() => {}}
           onDeleteSelected={this.onDeleteSelected}
           onCreateEdge={this.onCreateEdge}
-          onSwapEdge={() => {}}
+          canDeleteSelected={this.canDeleteSelected}
         />
       </div>
     )
