@@ -21,7 +21,7 @@ const getAdjacencyList = (
   return adjacencyList
 }
 
-export const getCycle = (
+export const isAcyclic = (
   edges: {
     source: string
     target: string
@@ -34,10 +34,12 @@ export const getCycle = (
     for (const path of queue) {
       const parents = adjacencyList.get(path[0]) || []
       for (const node of parents) {
-        if (node === path[path.length - 1]) return [node, ...path]
+        if (node === path[path.length - 1]) return false
         batch.push([node, ...path])
       }
     }
     queue = batch
   }
+
+  return true
 }
