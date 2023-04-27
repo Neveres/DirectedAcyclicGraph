@@ -32,7 +32,7 @@ const nodes = [
     y: 300,
   },
   {
-    id: 'F',
+    id: generateUuid(),
     title: 'F',
     x: 500,
     y: 0,
