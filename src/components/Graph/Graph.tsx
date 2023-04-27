@@ -37,6 +37,35 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
     notification.error(content)
   }
 
+  updateSelectedNodeIdForGraph = (
+    currentID: string,
+    graph: IGraphState['graph'],
+  ) => {
+    const { edges, nodes } = graph
+    const newId = generateUuid()
+
+    return {
+      nodes: nodes.map((node) =>
+        node.id === currentID ? { ...node, id: newId } : node,
+      ),
+      edges: edges.map((edge) => {
+        if (edge.source === currentID) {
+          return {
+            ...edge,
+            source: newId,
+          }
+        } else if (edge.target === currentID) {
+          return {
+            ...edge,
+            target: newId,
+          }
+        } else {
+          return edge
+        }
+      }),
+    }
+  }
+
   onDeleteSelected: IGraphViewProps['onDeleteSelected'] = (selected) => {
     const { graph } = this.state
     const { edges, nodes } = graph
@@ -51,10 +80,10 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
       )
 
       this.setState({
-        graph: {
-          ...graph,
+        graph: this.updateSelectedNodeIdForGraph(source, {
           edges: newEdges,
-        },
+          nodes,
+        }),
       })
     } else if (selectedNodes) {
       const [selectedNode] = Array.from(selectedNodes.values())
