@@ -102,27 +102,18 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
     const { graph } = this.state
     const { edges } = graph
 
-    const newEdges = [
-      ...edges,
-      {
-        source: sourceNode.id,
-        target: targetNode.id,
+    this.setState({
+      graph: {
+        ...graph,
+        edges: [
+          ...edges,
+          {
+            source: sourceNode.id,
+            target: targetNode.id,
+          },
+        ],
       },
-    ]
-
-    if (isAcyclic(newEdges)) {
-      this.setState({
-        graph: {
-          ...graph,
-          edges: newEdges,
-        },
-      })
-    } else {
-      this.openNotificationWithIcon({
-        message: 'Invalid edge',
-        description: 'Adding this edge would create cycle.',
-      })
-    }
+    })
   }
 
   canDeleteSelected: IGraphViewProps['canDeleteSelected'] = (selected) => {
@@ -154,6 +145,33 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
     return true
   }
 
+  canCreateEdge: IGraphViewProps['canCreateEdge'] = (startNode, endNode) => {
+    const { graph } = this.state
+    const { edges } = graph
+
+    const newEdges =
+      startNode && endNode
+        ? [
+            ...edges,
+            {
+              source: startNode.id,
+              target: endNode.id,
+            },
+          ]
+        : edges
+
+    const result = isAcyclic(newEdges)
+
+    if (!result) {
+      this.openNotificationWithIcon({
+        message: 'Invalid edge',
+        description: 'Adding this edge would create cycle.',
+      })
+    }
+
+    return result
+  }
+
   render() {
     const {
       graph: { nodes, edges },
@@ -183,6 +201,7 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
           onDeleteSelected={this.onDeleteSelected}
           onCreateEdge={this.onCreateEdge}
           canDeleteSelected={this.canDeleteSelected}
+          canCreateEdge={this.canCreateEdge}
         />
       </div>
     )
