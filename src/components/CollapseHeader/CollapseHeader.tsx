@@ -23,7 +23,7 @@ const Hints = () => (
 const CollapseHeader = () => {
   return (
     <Collapse>
-      <Panel header="Tutorial" key="1">
+      <Panel header="Click here to see how it works" key="1">
         <Hints />
         <div style={{ paddingLeft: '25px' }}>{NOTE}</div>
       </Panel>
