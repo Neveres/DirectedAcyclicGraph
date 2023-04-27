@@ -1,7 +1,7 @@
 import React from 'react'
 import { Input, notification } from 'antd'
 import { GraphView, IGraphViewProps } from 'react-digraph'
-import { isLabelValid, getCycle } from 'src/libraries'
+import { isLabelValid, isAcyclic } from 'src/libraries'
 import GraphConfig, { NODE_KEY } from './config'
 import defaultGraph from './default-graph'
 
@@ -74,7 +74,7 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
       },
     ]
 
-    if (!getCycle(newEdges)) {
+    if (isAcyclic(newEdges)) {
       this.setState({
         graph: {
           ...graph,
