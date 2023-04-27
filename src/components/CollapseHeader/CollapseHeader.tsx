@@ -5,8 +5,8 @@ const { Panel } = Collapse
 
 const hints = [
   'To add nodes, hold shift and click on the grid.',
-  'To add edges, hold shift and click/drag to between nodes.',
-  'To delete a node or edge, click on it and press Del button on your keyboard.',
+  'To add edges, hold shift, click and drag from one node to another.',
+  'To delete a node or edge, click on it and press Delete/Backspace button on your keyboard.',
   'Click and drag nodes to change their position.',
 ]
 
