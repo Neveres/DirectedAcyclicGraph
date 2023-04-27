@@ -1,7 +1,7 @@
 import React from 'react'
 import { Input, notification } from 'antd'
 import { GraphView, IGraphViewProps } from 'react-digraph'
-import { isLabelValid, isAcyclic } from 'src/libraries'
+import { isLabelValid, isAcyclic, generateUuid } from 'src/libraries'
 import GraphConfig, { NODE_KEY } from './config'
 import defaultGraph from './default-graph'
 
@@ -58,13 +58,13 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
       })
     } else if (selectedNodes) {
       const [selectedNode] = Array.from(selectedNodes.values())
-      const { title } = selectedNode
+      const { id } = selectedNode
 
       const newEdges = edges.filter(
-        ({ source, target }) => source !== title && target !== title,
+        ({ source, target }) => source !== id && target !== id,
       )
 
-      const newNodes = nodes.filter((node) => node.title !== title)
+      const newNodes = nodes.filter((node) => node.id !== id)
 
       this.setState({
         graph: {
@@ -75,7 +75,7 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
     }
   }
 
-  onSelect: IGraphViewProps['onSelect'] = (selected, event) => {
+  onSelect: IGraphViewProps['onSelect'] = (selected) => {
     this.setState({ selected })
   }
 
@@ -87,7 +87,7 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
       this.setState({
         graph: {
           ...graph,
-          nodes: [...nodes, { id: label, title: label, x, y }],
+          nodes: [...nodes, { id: generateUuid(), title: label, x, y }],
         },
       })
     } else {
@@ -105,8 +105,8 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
     const newEdges = [
       ...edges,
       {
-        source: sourceNode.title,
-        target: targetNode.title,
+        source: sourceNode.id,
+        target: targetNode.id,
       },
     ]
 
@@ -142,10 +142,10 @@ export class Graph extends React.Component<IGraphProps, IGraphState> {
       return isAcyclic(newEdges)
     } else if (selectedNodes) {
       const [selectedNode] = Array.from(selectedNodes.values())
-      const { title } = selectedNode
+      const { id } = selectedNode
 
       const newEdges = edges.filter(
-        ({ source, target }) => source !== title && target !== title,
+        ({ source, target }) => source !== id && target !== id,
       )
 
       return isAcyclic(newEdges)

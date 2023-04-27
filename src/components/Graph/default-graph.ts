@@ -1,84 +1,88 @@
+import { generateUuid } from 'src/libraries'
+
+const nodes = [
+  {
+    id: generateUuid(),
+    title: 'A',
+    x: 0,
+    y: 100,
+  },
+  {
+    id: generateUuid(),
+    title: 'B',
+    x: 300,
+    y: 300,
+  },
+  {
+    id: generateUuid(),
+    title: 'C',
+    x: 50,
+    y: 600,
+  },
+  {
+    id: generateUuid(),
+    title: 'D',
+    x: 700,
+    y: 500,
+  },
+  {
+    id: generateUuid(),
+    title: 'E',
+    x: 1000,
+    y: 300,
+  },
+  {
+    id: 'F',
+    title: 'F',
+    x: 500,
+    y: 0,
+  },
+  {
+    id: generateUuid(),
+    title: 'G',
+    x: -300,
+    y: 300,
+  },
+]
+
 export default {
   edges: [
     {
-      source: 'A',
-      target: 'F',
+      source: nodes[0].id,
+      target: nodes[5].id,
     },
     {
-      source: 'A',
-      target: 'B',
+      source: nodes[0].id,
+      target: nodes[1].id,
     },
     {
-      source: 'A',
-      target: 'G',
+      source: nodes[0].id,
+      target: nodes[6].id,
     },
     {
-      source: 'B',
-      target: 'E',
+      source: nodes[1].id,
+      target: nodes[4].id,
     },
     {
-      source: 'B',
-      target: 'C',
+      source: nodes[1].id,
+      target: nodes[2].id,
     },
     {
-      source: 'C',
-      target: 'G',
+      source: nodes[2].id,
+      target: nodes[6].id,
     },
     {
-      source: 'D',
-      target: 'C',
+      source: nodes[3].id,
+      target: nodes[2].id,
     },
     {
-      source: 'E',
-      target: 'D',
+      source: nodes[4].id,
+      target: nodes[3].id,
     },
     {
-      source: 'F',
-      target: 'D',
+      source: nodes[5].id,
+      target: nodes[3].id,
     },
   ],
-  nodes: [
-    {
-      id: 'A',
-      title: 'A',
-      x: 0,
-      y: 100,
-    },
-    {
-      id: 'B',
-      title: 'B',
-      x: 300,
-      y: 300,
-    },
-    {
-      id: 'C',
-      title: 'C',
-      x: 50,
-      y: 600,
-    },
-    {
-      id: 'D',
-      title: 'D',
-      x: 700,
-      y: 500,
-    },
-    {
-      id: 'E',
-      title: 'E',
-      x: 1000,
-      y: 300,
-    },
-    {
-      id: 'F',
-      title: 'F',
-      x: 500,
-      y: 0,
-    },
-    {
-      id: 'G',
-      title: 'G',
-      x: -300,
-      y: 300,
-    },
-  ],
+  nodes,
 }
